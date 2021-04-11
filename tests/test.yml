@@ -1,0 +1,10 @@
+---
+- name: "Testing role role-create-backing-vol"
+  hosts: localhost
+  roles:
+  - role: create-backing-image
+    vars: 
+      pool: default
+      os_name: ubuntu
+      os_version: 18.04
+

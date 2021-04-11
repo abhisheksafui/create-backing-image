@@ -1,0 +1,49 @@
+---
+- name: Including OS cloud image url 
+  include_vars: "{{ os_name }}_{{ os_version }}.yml"
+
+- set_fact:
+    image_name: "{{ os_name }}_{{ os_version }}_cloudimage.qcow2"
+    downloaded_image: "{{ os_name }}_{{ os_version }}_download.qcow2"
+
+- name: Check existance of volume in pool
+
+  shell: > 
+    virsh -c qemu:///system vol-list {{ pool }} | grep {{ image_name }}
+  register: vol_existance_check
+  ignore_errors: yes
+
+- block:
+
+  - name: Download OS Cloud Image
+    get_url:
+      url: "{{ image_url }}"
+      dest: ./{{ downloaded_image }}
+
+  - name: Get image size
+    shell: qemu-img info {{ downloaded_image }} --output json | python3 -c 'import sys, json; print(json.load(sys.stdin)["actual-size"])'
+    register: image_size
+
+  - set_fact:
+      image_size: "{{ image_size.stdout }}"
+
+
+  - name: Create Volume 
+    shell: >
+      virsh -c qemu:///system vol-create-as 
+      {{ pool }} {{ image_name }}
+      {{ image_size }} --format {{ format }}
+
+  - name: Upload Downloaded Image to Created Volume
+    shell: >
+      virsh -c qemu:///system vol-upload
+      {{ image_name }} {{ downloaded_image }}
+      --pool {{ pool}}
+
+  - name: Remove Downloaded image
+    shell: >
+      rm ./{{ os_name }}_{{ os_version }}_download.qcow2
+
+  when: vol_existance_check.rc == 1
+
+

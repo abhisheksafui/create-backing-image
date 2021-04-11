@@ -12,7 +12,7 @@ Role Variables
 --------------
 pool: Name of the libvirt pool under which image will be installed
 os_name: Name of OS. One of ubuntu,debian
-os_version: For ubuntu speicfy the version '18.04', for debian specify the version 'buster'. Other os versions will be added. 
+os_version: For ubuntu speicfy the version '18.04' or '20.04', for debian specify the version 'buster'. Other os versions will be added. 
 
 
 Dependencies

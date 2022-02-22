@@ -1,0 +1,4 @@
+---
+# vars file for role-create-backing-vol
+
+#ubuntu_18.04: https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img

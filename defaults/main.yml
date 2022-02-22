@@ -1,2 +1,6 @@
 ---
-# defaults file for create-backing-image
+# defaults file for role-create-backing-vol
+pool: default
+format: qcow2 
+os_name: ubuntu
+os_version: 18.04
